@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabla Periódica Interactiva</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow: hidden;
+            /* Fondo de degradado restaurado */
+            background: linear-gradient(to right, #ff7e5f, #feb47b, #86fde8, #71faff);
+        }
+
+        .periodic-table-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .periodic-table-grid {
+            display: grid;
+            grid-template-columns: repeat(18, 1fr);
+            gap: 5px;
+        }
+        
+        .element-cell {
+            position: relative;
+            background-color: #e2e8f0;
+            border-radius: 8px;
+            padding: 8px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            user-select: none;
+        }
+        
+        .element-cell.active {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .element-cell:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .element-cell.is-hidden {
+            visibility: hidden;
+            opacity: 0;
+            width: 0;
+            height: 0;
+            margin: 0;
+            padding: 0;
+            border: none;
+            transition: visibility 0s 0.2s, opacity 0.2s linear, width 0.2s, height 0.2s;
+        }
+
+        .element-number {
+            font-size: 0.75rem;
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            font-weight: bold;
+        }
+        
+        .element-symbol {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .element-name {
+            font-size: 0.65rem;
+            text-transform: lowercase;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .group-cell {
+            background-color: #cbd5e0;
+            padding: 8px;
+            text-align: center;
+            border-radius: 8px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .lanthanide-actinide-block {
+            display: grid;
+            grid-template-columns: repeat(15, 1fr);
+            gap: 5px;
+            margin-top: 20px;
+        }
+
+        /* Color de los grupos */
+        .color-metales { background-color: #66b3ff; }
+        .color-no-metales { background-color: #ff9966; }
+        .color-metaloides { background-color: #99ffcc; }
+        .color-halogenos { background-color: #8c8cd9; }
+        .color-gases-nobles { background-color: #d9b3ff; }
+        .color-actinidos { background-color: #ff99cc; }
+        .color-lantanidos { background-color: #ffb3b3; }
+        .color-otros { background-color: #e2e8f0; }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-right: 15px;
+        }
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .legend-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 350px;
+            height: 100%;
+            background-color: #2d3748;
+            color: #ffffff;
+            transition: right 0.3s ease-in-out;
+            padding: 20px;
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+        }
+
+        .sidebar.open {
+            right: 0;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 2rem;
+            cursor: pointer;
+        }
+
+        .info-title {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .info-symbol {
+            font-size: 4rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #66b3ff;
+        }
+
+        .info-item {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="periodic-table-container">
+        <h1 class="text-3xl font-bold text-center mb-8 text-gray-800">Tabla Periódica de los Elementos Químicos</h1>
+
+        <!-- Leyenda de colores -->
+        <div class="flex flex-wrap justify-center mb-8 text-sm">
+            <div class="legend-item cursor-pointer" onclick="filterElements('Metales')">
+                <div class="legend-color color-metales"></div>Metales
+            </div>
+            <div class="legend-item cursor-pointer" onclick="filterElements('No metales')">
+                <div class="legend-color color-no-metales"></div>No metales
+            </div>
+            <div class="legend-item cursor-pointer" onclick="filterElements('Metaloides')">
+                <div class="legend-color color-metaloides"></div>Metaloides
+            </div>
+            <div class="legend-item cursor-pointer" onclick="filterElements('Halogenos')">
+                <div class="legend-color color-halogenos"></div>Halógenos
+            </div>
+            <div class="legend-item cursor-pointer" onclick="filterElements('Gases Nobles')">
+                <div class="legend-color color-gases-nobles"></div>Gases Nobles
+            </div>
+            <div class="legend-item cursor-pointer" onclick="filterElements('Lantanidos')">
+                <div class="legend-color color-lantanidos"></div>Lantánidos
+            </div>
+            <div class="legend-item cursor-pointer" onclick="filterElements('Actinidos')">
+                <div class="legend-color color-actinidos"></div>Actínidos
+            </div>
+            <div class="legend-item cursor-pointer" onclick="filterElements('todos')">
+                <div class="legend-color color-otros"></div>Mostrar Todos
+            </div>
+        </div>
+
+        <div class="periodic-table-grid" id="main-table">
+            <!-- Los elementos se generarán aquí con JavaScript -->
+        </div>
+
+        <!-- Bloque de lantánidos y actínidos -->
+        <div class="lanthanide-actinide-block" id="lanthanide-actinide-block">
+             <!-- Los elementos se generarán aquí con JavaScript -->
+        </div>
+    </div>
+
+    <!-- Panel lateral con información del elemento -->
+    <div class="sidebar" id="sidebar">
+        <span class="close-btn" id="close-btn">&times;</span>
+        <div class="info-container mt-10">
+            <h2 class="info-title" id="info-name"></h2>
+            <p class="info-symbol" id="info-symbol"></p>
+            <div class="text-lg">
+                <p class="info-item"><strong>Número Atómico:</strong> <span id="info-number"></span></p>
+                <p class="info-item"><strong>Masa Atómica:</strong> <span id="info-mass"></span></p>
+                <p class="info-item"><strong>Configuración Electrónica:</strong> <span id="info-config"></span></p>
+                <p class="info-item"><strong>Electronegatividad:</strong> <span id="info-electronegativity"></span></p>
+                <p class="info-item"><strong>Descubrimiento:</strong> <span id="info-discovery"></span></p>
+                <p class="info-item"><strong>Descubridor(es):</strong> <span id="info-discoverers"></span></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Datos de los elementos de la tabla periódica.
+        const elements = [
+            { "name": "Hidrógeno", "symbol": "H", "number": 1, "mass": 1.008, "xpos": 1, "ypos": 1, "category": "No metales", "config": "1s¹", "electronegativity": 2.2, "discovery": "1766", "discoverers": "Henry Cavendish" },
+            { "name": "Helio", "symbol": "He", "number": 2, "mass": 4.002602, "xpos": 18, "ypos": 1, "category": "Gases Nobles", "config": "1s²", "electronegativity": null, "discovery": "1868", "discoverers": "Pierre Janssen, Norman Lockyer" },
+            { "name": "Litio", "symbol": "Li", "number": 3, "mass": 6.94, "xpos": 1, "ypos": 2, "category": "Metales", "config": "[He] 2s¹", "electronegativity": 0.98, "discovery": "1817", "discoverers": "Johan August Arfwedson" },
+            { "name": "Berilio", "symbol": "Be", "number": 4, "mass": 9.0121831, "xpos": 2, "ypos": 2, "category": "Metales", "config": "[He] 2s²", "electronegativity": 1.57, "discovery": "1798", "discoverers": "Louis-Nicolas Vauquelin" },
+            { "name": "Boro", "symbol": "B", "number": 5, "mass": 10.81, "xpos": 13, "ypos": 2, "category": "Metaloides", "config": "[He] 2s² 2p¹", "electronegativity": 2.04, "discovery": "1808", "discoverers": "Humphry Davy, Joseph Louis Gay-Lussac, Louis Jacques Thénard" },
+            { "name": "Carbono", "symbol": "C", "number": 6, "mass": 12.011, "xpos": 14, "ypos": 2, "category": "No metales", "config": "[He] 2s² 2p²", "electronegativity": 2.55, "discovery": "Antigüedad", "discoverers": "Desconocido" },
+            { "name": "Nitrógeno", "symbol": "N", "number": 7, "mass": 14.007, "xpos": 15, "ypos": 2, "category": "No metales", "config": "[He] 2s² 2p³", "electronegativity": 3.04, "discovery": "1772", "discoverers": "Daniel Rutherford" },
+            { "name": "Oxígeno", "symbol": "O", "number": 8, "mass": 15.999, "xpos": 16, "ypos": 2, "category": "No metales", "config": "[He] 2s² 2p⁴", "electronegativity": 3.44, "discovery": "1774", "discoverers": "Joseph Priestley, Carl Wilhelm Scheele" },
+            { "name": "Flúor", "symbol": "F", "number": 9, "mass": 18.9984032, "xpos": 17, "ypos": 2, "category": "Halogenos", "config": "[He] 2s² 2p⁵", "electronegativity": 3.98, "discovery": "1886", "discoverers": "Henri Moissan" },
+            { "name": "Neón", "symbol": "Ne", "number": 10, "mass": 20.1797, "xpos": 18, "ypos": 2, "category": "Gases Nobles", "config": "[He] 2s² 2p⁶", "electronegativity": null, "discovery": "1898", "discoverers": "William Ramsay, Morris Travers" },
+            { "name": "Sodio", "symbol": "Na", "number": 11, "mass": 22.98976928, "xpos": 1, "ypos": 3, "category": "Metales", "config": "[Ne] 3s¹", "electronegativity": 0.93, "discovery": "1807", "discoverers": "Humphry Davy" },
+            { "name": "Magnesio", "symbol": "Mg", "number": 12, "mass": 24.305, "xpos": 2, "ypos": 3, "category": "Metales", "config": "[Ne] 3s²", "electronegativity": 1.31, "discovery": "1755", "discoverers": "Joseph Black" },
+            { "name": "Aluminio", "symbol": "Al", "number": 13, "mass": 26.9815385, "xpos": 13, "ypos": 3, "category": "Metales", "config": "[Ne] 3s² 3p¹", "electronegativity": 1.61, "discovery": "1825", "discoverers": "Hans Christian Ørsted" },
+            { "name": "Silicio", "symbol": "Si", "number": 14, "mass": 28.085, "xpos": 14, "ypos": 3, "category": "Metaloides", "config": "[Ne] 3s² 3p²", "electronegativity": 1.9, "discovery": "1823", "discoverers": "Jöns Jacob Berzelius" },
+            { "name": "Fósforo", "symbol": "P", "number": 15, "mass": 30.973761998, "xpos": 15, "ypos": 3, "category": "No metales", "config": "[Ne] 3s² 3p³", "electronegativity": 2.19, "discovery": "1669", "discoverers": "Hennig Brand" },
+            { "name": "Azufre", "symbol": "S", "number": 16, "mass": 32.06, "xpos": 16, "ypos": 3, "category": "No metales", "config": "[Ne] 3s² 3p⁴", "electronegativity": 2.58, "discovery": "Antigüedad", "discoverers": "Desconocido" },
+            { "name": "Cloro", "symbol": "Cl", "number": 17, "mass": 35.45, "xpos": 17, "ypos": 3, "category": "Halogenos", "config": "[Ne] 3s² 3p⁵", "electronegativity": 3.16, "discovery": "1774", "discoverers": "Carl Wilhelm Scheele" },
+            { "name": "Argón", "symbol": "Ar", "number": 18, "mass": 39.948, "xpos": 18, "ypos": 3, "category": "Gases Nobles", "config": "[Ne] 3s² 3p⁶", "electronegativity": null, "discovery": "1894", "discoverers": "Lord Rayleigh, William Ramsay" },
+            { "name": "Potasio", "symbol": "K", "number": 19, "mass": 39.0983, "xpos": 1, "ypos": 4, "category": "Metales", "config": "[Ar] 4s¹", "electronegativity": 0.82, "discovery": "1807", "discoverers": "Humphry Davy" },
+            { "name": "Calcio", "symbol": "Ca", "number": 20, "mass": 40.078, "xpos": 2, "ypos": 4, "category": "Metales", "config": "[Ar] 4s²", "electronegativity": 1.0, "discovery": "1808", "discoverers": "Humphry Davy" },
+            { "name": "Escandio", "symbol": "Sc", "number": 21, "mass": 44.955908, "xpos": 3, "ypos": 4, "category": "Metales", "config": "[Ar] 3d¹ 4s²", "electronegativity": 1.36, "discovery": "1879", "discoverers": "Lars Fredrik Nilson" },
+            { "name": "Titanio", "symbol": "Ti", "number": 22, "mass": 47.867, "xpos": 4, "ypos": 4, "category": "Metales", "config": "[Ar] 3d² 4s²", "electronegativity": 1.54, "discovery": "1791", "discoverers": "William Gregor" },
+            { "name": "Vanadio", "symbol": "V", "number": 23, "mass": 50.9415, "xpos": 5, "ypos": 4, "category": "Metales", "config": "[Ar] 3d³ 4s²", "electronegativity": 1.63, "discovery": "1830", "discoverers": "Nils Gabriel Sefström" },
+            { "name": "Cromo", "symbol": "Cr", "number": 24, "mass": 51.9961, "xpos": 6, "ypos": 4, "category": "Metales", "config": "[Ar] 3d⁵ 4s¹", "electronegativity": 1.66, "discovery": "1797", "discoverers": "Louis Nicolas Vauquelin" },
+            { "name": "Manganeso", "symbol": "Mn", "number": 25, "mass": 54.938044, "xpos": 7, "ypos": 4, "category": "Metales", "config": "[Ar] 3d⁵ 4s²", "electronegativity": 1.55, "discovery": "1774", "discoverers": "Johan Gottlieb Gahn" },
+            { "name": "Hierro", "symbol": "Fe", "number": 26, "mass": 55.845, "xpos": 8, "ypos": 4, "category": "Metales", "config": "[Ar] 3d⁶ 4s²", "electronegativity": 1.83, "discovery": "Antigüedad", "discoverers": "Desconocido" },
+            { "name": "Cobalto", "symbol": "Co", "number": 27, "mass": 58.933194, "xpos": 9, "ypos": 4, "category": "Metales", "config": "[Ar] 3d⁷ 4s²", "electronegativity": 1.88, "discovery": "1735", "discoverers": "Georg Brandt" },
+            { "name": "Níquel", "symbol": "Ni", "number": 28, "mass": 58.6934, "xpos": 10, "ypos": 4, "category": "Metales", "config": "[Ar] 3d⁸ 4s²", "electronegativity": 1.91, "discovery": "1751", "discoverers": "Axel Fredrik Cronstedt" },
+            { "name": "Cobre", "symbol": "Cu", "number": 29, "mass": 63.546, "xpos": 11, "ypos": 4, "category": "Metales", "config": "[Ar] 3d¹⁰ 4s¹", "electronegativity": 1.9, "discovery": "Antigüedad", "discoverers": "Desconocido" },
+            { "name": "Zinc", "symbol": "Zn", "number": 30, "mass": 65.38, "xpos": 12, "ypos": 4, "category": "Metales", "config": "[Ar] 3d¹⁰ 4s²", "electronegativity": 1.65, "discovery": "1746", "discoverers": "Andreas Marggraf" },
+            { "name": "Galio", "symbol": "Ga", "number": 31, "mass": 69.723, "xpos": 13, "ypos": 4, "category": "Metales", "config": "[Ar] 3d¹⁰ 4s² 4p¹", "electronegativity": 1.81, "discovery": "1875", "discoverers": "Paul-Émile Lecoq de Boisbaudran" },
+            { "name": "Germanio", "symbol": "Ge", "number": 32, "mass": 72.63, "xpos": 14, "ypos": 4, "category": "Metaloides", "config": "[Ar] 3d¹⁰ 4s² 4p²", "electronegativity": 2.01, "discovery": "1886", "discoverers": "Clemens Winkler" },
+            { "name": "Arsénico", "symbol": "As", "number": 33, "mass": 74.921595, "xpos": 15, "ypos": 4, "category": "Metaloides", "config": "[Ar] 3d¹⁰ 4s² 4p³", "electronegativity": 2.18, "discovery": "1250", "discoverers": "Alberto Magno" },
+            { "name": "Selenio", "symbol": "Se", "number": 34, "mass": 78.971, "xpos": 16, "ypos": 4, "category": "No metales", "config": "[Ar] 3d¹⁰ 4s² 4p⁴", "electronegativity": 2.55, "discovery": "1817", "discoverers": "Jöns Jacob Berzelius" },
+            { "name": "Bromo", "symbol": "Br", "number": 35, "mass": 79.904, "xpos": 17, "ypos": 4, "category": "Halogenos", "config": "[Ar] 3d¹⁰ 4s² 4p⁵", "electronegativity": 2.96, "discovery": "1826", "discoverers": "Antoine Jérôme Balard" },
+            { "name": "Kriptón", "symbol": "Kr", "number": 36, "mass": 83.798, "xpos": 18, "ypos": 4, "category": "Gases Nobles", "config": "[Ar] 3d¹⁰ 4s² 4p⁶", "electronegativity": 3.0, "discovery": "1898", "discoverers": "William Ramsay, Morris Travers" },
+            { "name": "Rubidio", "symbol": "Rb", "number": 37, "mass": 85.4678, "xpos": 1, "ypos": 5, "category": "Metales", "config": "[Kr] 5s¹", "electronegativity": 0.82, "discovery": "1861", "discoverers": "Robert Bunsen, Gustav Kirchhoff" },
+            { "name": "Estroncio", "symbol": "Sr", "number": 38, "mass": 87.62, "xpos": 2, "ypos": 5, "category": "Metales", "config": "[Kr] 5s²", "electronegativity": 0.95, "discovery": "1790", "discoverers": "Adair Crawford" },
+            { "name": "Ytrio", "symbol": "Y", "number": 39, "mass": 88.90584, "xpos": 3, "ypos": 5, "category": "Metales", "config": "[Kr] 4d¹ 5s²", "electronegativity": 1.22, "discovery": "1794", "discoverers": "Johan Gadolin" },
+            { "name": "Circonio", "symbol": "Zr", "number": 40, "mass": 91.224, "xpos": 4, "ypos": 5, "category": "Metales", "config": "[Kr] 4d² 5s²", "electronegativity": 1.33, "discovery": "1789", "discoverers": "Martin Heinrich Klaproth" },
+            { "name": "Niobio", "symbol": "Nb", "number": 41, "mass": 92.90637, "xpos": 5, "ypos": 5, "category": "Metales", "config": "[Kr] 4d⁴ 5s¹", "electronegativity": 1.6, "discovery": "1801", "discoverers": "Charles Hatchett" },
+            { "name": "Molibdeno", "symbol": "Mo", "number": 42, "mass": 95.95, "xpos": 6, "ypos": 5, "category": "Metales", "config": "[Kr] 4d⁵ 5s¹", "electronegativity": 2.16, "discovery": "1778", "discoverers": "Carl Wilhelm Scheele" },
+            { "name": "Tecnecio", "symbol": "Tc", "number": 43, "mass": 98, "xpos": 7, "ypos": 5, "category": "Metales", "config": "[Kr] 4d⁵ 5s²", "electronegativity": 1.9, "discovery": "1937", "discoverers": "Carlo Perrier, Emilio Segrè" },
+            { "name": "Rutenio", "symbol": "Ru", "number": 44, "mass": 101.07, "xpos": 8, "ypos": 5, "category": "Metales", "config": "[Kr] 4d⁷ 5s¹", "electronegativity": 2.2, "discovery": "1844", "discoverers": "Karl Ernst Claus" },
+            { "name": "Rodio", "symbol": "Rh", "number": 45, "mass": 102.90550, "xpos": 9, "ypos": 5, "category": "Metales", "config": "[Kr] 4d⁸ 5s¹", "electronegativity": 2.28, "discovery": "1803", "discoverers": "William Hyde Wollaston" },
+            { "name": "Paladio", "symbol": "Pd", "number": 46, "mass": 106.42, "xpos": 10, "ypos": 5, "category": "Metales", "config": "[Kr] 4d¹⁰", "electronegativity": 2.2, "discovery": "1803", "discoverers": "William Hyde Wollaston" },
+            { "name": "Plata", "symbol": "Ag", "number": 47, "mass": 107.8682, "xpos": 11, "ypos": 5, "category": "Metales", "config": "[Kr] 4d¹⁰ 5s¹", "electronegativity": 1.93, "discovery": "Antigüedad", "discoverers": "Desconocido" },
+            { "name": "Cadmio", "symbol": "Cd", "number": 48, "mass": 112.414, "xpos": 12, "ypos": 5, "category": "Metales", "config": "[Kr] 4d¹⁰ 5s²", "electronegativity": 1.69, "discovery": "1817", "discoverers": "Friedrich Stromeyer" },
+            { "name": "Indio", "symbol": "In", "number": 49, "mass": 114.818, "xpos": 13, "ypos": 5, "category": "Metales", "config": "[Kr] 4d¹⁰ 5s² 5p¹", "electronegativity": 1.78, "discovery": "1863", "discoverers": "Ferdinand Reich, Hieronymus Theodor Richter" },
+            { "name": "Estaño", "symbol": "Sn", "number": 50, "mass": 118.710, "xpos": 14, "ypos": 5, "category": "Metales", "config": "[Kr] 4d¹⁰ 5s² 5p²", "electronegativity": 1.96, "discovery": "Antigüedad", "discoverers": "Desconocido" },
+            { "name": "Antimonio", "symbol": "Sb", "number": 51, "mass": 121.760, "xpos": 15, "ypos": 5, "category": "Metaloides", "config": "[Kr] 4d¹⁰ 5s² 5p³", "electronegativity": 2.05, "discovery": "Antigüedad", "discoverers": "Desconocido" },
+            { "name": "Telurio", "symbol": "Te", "number": 52, "mass": 127.60, "xpos": 16, "ypos": 5, "category": "Metaloides", "config": "[Kr] 4d¹⁰ 5s² 5p⁴", "electronegativity": 2.1, "discovery": "1783", "discoverers": "Franz-Joseph Müller von Reichenstein" },
+            { "name": "Yodo", "symbol": "I", "number": 53, "mass": 126.90447, "xpos": 17, "ypos": 5, "category": "Halogenos", "config": "[Kr] 4d¹⁰ 5s² 5p⁵", "electronegativity": 2.66, "discovery": "1811", "discoverers": "Bernard Courtois" },
+            { "name": "Xenón", "symbol": "Xe", "number": 54, "mass": 131.293, "xpos": 18, "ypos": 5, "category": "Gases Nobles", "config": "[Kr] 4d¹⁰ 5s² 5p⁶", "electronegativity": 2.6, "discovery": "1898", "discoverers": "William Ramsay, Morris Travers" },
+            { "name": "Cesio", "symbol": "Cs", "number": 55, "mass": 132.9054520, "xpos": 1, "ypos": 6, "category": "Metales", "config": "[Xe] 6s¹", "electronegativity": 0.79, "discovery": "1860", "discoverers": "Robert Bunsen, Gustav Kirchhoff" },
+            { "name": "Bario", "symbol": "Ba", "number": 56, "mass": 137.327, "xpos": 2, "ypos": 6, "category": "Metales", "config": "[Xe] 6s²", "electronegativity": 0.89, "discovery": "1774", "discoverers": "Carl Wilhelm Scheele" },
+            { "name": "Lantano", "symbol": "La", "number": 57, "mass": 138.90547, "xpos": 3, "ypos": 6, "category": "Lantanidos", "config": "[Xe] 5d¹ 6s²", "electronegativity": 1.1, "discovery": "1839", "discoverers": "Carl Gustaf Mosander" },
+            { "name": "Lutecio", "symbol": "Lu", "number": 71, "mass": 174.9668, "xpos": 3, "ypos": 6, "category": "Lantanidos", "config": "[Xe] 4f¹⁴ 5d¹ 6s²", "electronegativity": 1.27, "discovery": "1907", "discoverers": "Georges Urbain" },
+            { "name": "Hafnio", "symbol": "Hf", "number": 72, "mass": 178.49, "xpos": 4, "ypos": 6, "category": "Metales", "config": "[Xe] 4f¹⁴ 5d² 6s²", "electronegativity": 1.3, "discovery": "1923", "discoverers": "Dirk Coster, George de Hevesy" },
+            { "name": "Tantalio", "symbol": "Ta", "number": 73, "mass": 180.94788, "xpos": 5, "ypos": 6, "category": "Metales", "config": "[Xe] 4f¹⁴ 5d³ 6s²", "electronegativity": 1.5, "discovery": "1802", "discoverers": "Anders Gustaf Ekeberg" },
+            { "name": "Tungsteno", "symbol": "W", "number": 74, "mass": 183.84, "xpos": 6, "ypos": 6, "category": "Metales", "config": "[Xe] 4f¹⁴ 5d⁴ 6s²", "electronegativity": 2.36, "discovery": "1783", "discoverers": "José and Fausto Elhuyar" },
+            { "name": "Renio", "symbol": "Re", "number": 75, "mass": 186.207, "xpos": 7, "ypos": 6, "category": "Metales", "config": "[Xe] 4f¹⁴ 5d⁵ 6s²", "electronegativity": 1.9, "discovery": "1925", "discoverers": "Walter Noddack, Ida Noddack, Otto Berg" },
+            { "name": "Osmio", "symbol": "Os", "number": 76, "mass": 190.23, "xpos": 8, "ypos": 6, "category": "Metales", "config": "[Xe] 4f¹⁴ 5d⁶ 6s²", "electronegativity": 2.2, "discovery": "1803", "discoverers": "Smithson Tennant" },
+            { "name": "Iridio", "symbol": "Ir", "number": 77, "mass": 192.217, "xpos": 9, "ypos": 6, "category": "Metales", "config": "[Xe] 4f¹⁴ 5d⁷ 6s²", "electronegativity": 2.2, "discovery": "1803", "discoverers": "Smithson Tennant" },
+            { "name": "Platino", "symbol": "Pt", "number": 78, "mass": 195.084, "xpos": 10, "ypos": 6, "category": "Metales", "config": "[Xe] 4f¹⁴ 5d⁹ 6s¹", "electronegativity": 2.28, "discovery": "1735", "discoverers": "Antonio de Ulloa" },
+            { "name": "Oro", "symbol": "Au", "number": 79, "mass": 196.966570, "xpos": 11, "ypos": 6, "category": "Metales", "config": "[Xe] 4f¹⁴ 5d¹⁰ 6s¹", "electronegativity": 2.54, "discovery": "Antigüedad", "discoverers": "Desconocido" },
+            { "name": "Mercurio", "symbol": "Hg", "number": 80, "mass": 200.592, "xpos": 12, "ypos": 6, "category": "Metales", "config": "[Xe] 4f¹⁴ 5d¹⁰ 6s²", "electronegativity": 2.0, "discovery": "Antigüedad", "discoverers": "Desconocido" },
+            { "name": "Talio", "symbol": "Tl", "number": 81, "mass": 204.38, "xpos": 13, "ypos": 6, "category": "Metales", "config": "[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p¹", "electronegativity": 1.62, "discovery": "1861", "discoverers": "William Crookes" },
+            { "name": "Plomo", "symbol": "Pb", "number": 82, "mass": 207.2, "xpos": 14, "ypos": 6, "category": "Metales", "config": "[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p²", "electronegativity": 2.33, "discovery": "Antigüedad", "discoverers": "Desconocido" },
+            { "name": "Bismuto", "symbol": "Bi", "number": 83, "mass": 208.98040, "xpos": 15, "ypos": 6, "category": "Metales", "config": "[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p³", "electronegativity": 2.02, "discovery": "1753", "discoverers": "Claude François Geoffroy" },
+            { "name": "Polonio", "symbol": "Po", "number": 84, "mass": 209, "xpos": 16, "ypos": 6, "category": "Metaloides", "config": "[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p⁴", "electronegativity": 2.0, "discovery": "1898", "discoverers": "Marie Curie, Pierre Curie" },
+            { "name": "Ástato", "symbol": "At", "number": 85, "mass": 210, "xpos": 17, "ypos": 6, "category": "Halogenos", "config": "[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p⁵", "electronegativity": 2.2, "discovery": "1940", "discoverers": "Dale R. Corson, Kenneth Ross MacKenzie, Emilio Segrè" },
+            { "name": "Radón", "symbol": "Rn", "number": 86, "mass": 222, "xpos": 18, "ypos": 6, "category": "Gases Nobles", "config": "[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p⁶", "electronegativity": 2.2, "discovery": "1900", "discoverers": "Friedrich Ernst Dorn" },
+            { "name": "Francio", "symbol": "Fr", "number": 87, "mass": 223, "xpos": 1, "ypos": 7, "category": "Metales", "config": "[Rn] 7s¹", "electronegativity": 0.7, "discovery": "1939", "discoverers": "Marguerite Perey" },
+            { "name": "Radio", "symbol": "Ra", "number": 88, "mass": 226, "xpos": 2, "ypos": 7, "category": "Metales", "config": "[Rn] 7s²", "electronegativity": 0.9, "discovery": "1898", "discoverers": "Marie Curie, Pierre Curie" },
+            { "name": "Actinio", "symbol": "Ac", "number": 89, "mass": 227, "xpos": 3, "ypos": 7, "category": "Actinidos", "config": "[Rn] 6d¹ 7s²", "electronegativity": 1.1, "discovery": "1899", "discoverers": "André-Louis Debierne" },
+            { "name": "Lawrencio", "symbol": "Lr", "number": 103, "mass": 262, "xpos": 3, "ypos": 7, "category": "Actinidos", "config": "[Rn] 5f¹⁴ 7s² 7p¹", "electronegativity": 1.3, "discovery": "1961", "discoverers": "Albert Ghiorso, Torbjørn Sikkeland, Almon Larsh, Robert M. Latimer" },
+            { "name": "Rutherfordio", "symbol": "Rf", "number": 104, "mass": 267, "xpos": 4, "ypos": 7, "category": "Metales", "config": "[Rn] 5f¹⁴ 6d² 7s²", "electronegativity": 1.3, "discovery": "1964", "discoverers": "Joint Institute for Nuclear Research, Lawrence Berkeley National Laboratory" },
+            { "name": "Dubnio", "symbol": "Db", "number": 105, "mass": 268, "xpos": 5, "ypos": 7, "category": "Metales", "config": "[Rn] 5f¹⁴ 6d³ 7s²", "electronegativity": null, "discovery": "1970", "discoverers": "Joint Institute for Nuclear Research, Lawrence Berkeley National Laboratory" },
+            { "name": "Seaborgio", "symbol": "Sg", "number": 106, "mass": 269, "xpos": 6, "ypos": 7, "category": "Metales", "config": "[Rn] 5f¹⁴ 6d⁴ 7s²", "electronegativity": null, "discovery": "1974", "discoverers": "Albert Ghiorso" },
+            { "name": "Bohrio", "symbol": "Bh", "number": 107, "mass": 270, "xpos": 7, "ypos": 7, "category": "Metales", "config": "[Rn] 5f¹⁴ 6d⁵ 7s²", "electronegativity": null, "discovery": "1981", "discoverers": "Peter Armbruster, Gottfried Münzenberg" },
+            { "name": "Hassio", "symbol": "Hs", "number": 108, "mass": 269, "xpos": 8, "ypos": 7, "category": "Metales", "config": "[Rn] 5f¹⁴ 6d⁶ 7s²", "electronegativity": null, "discovery": "1984", "discoverers": "Peter Armbruster, Gottfried Münzenberg" },
+            { "name": "Meitnerio", "symbol": "Mt", "number": 109, "mass": 278, "xpos": 9, "ypos": 7, "category": "Metales", "config": "[Rn] 5f¹⁴ 6d⁷ 7s²", "electronegativity": null, "discovery": "1982", "discoverers": "Peter Armbruster, Gottfried Münzenberg" },
+            { "name": "Darmstadtio", "symbol": "Ds", "number": 110, "mass": 281, "xpos": 10, "ypos": 7, "category": "Metales", "config": "[Rn] 5f¹⁴ 6d⁹ 7s¹", "electronegativity": null, "discovery": "1994", "discoverers": "Peter Armbruster, Gottfried Münzenberg" },
+            { "name": "Roentgenio", "symbol": "Rg", "number": 111, "mass": 282, "xpos": 11, "ypos": 7, "category": "Metales", "config": "[Rn] 5f¹⁴ 6d¹⁰ 7s¹", "electronegativity": null, "discovery": "1994", "discoverers": "Peter Armbruster, Gottfried Münzenberg" },
+            { "name": "Copernicio", "symbol": "Cn", "number": 112, "mass": 285, "xpos": 12, "ypos": 7, "category": "Metales", "config": "[Rn] 5f¹⁴ 6d¹⁰ 7s²", "electronegativity": null, "discovery": "1996", "discoverers": "Sigurd Hofmann" },
+            { "name": "Nihonio", "symbol": "Nh", "number": 113, "mass": 286, "xpos": 13, "ypos": 7, "category": "Metales", "config": "[Rn] 5f¹⁴ 6d¹⁰ 7s² 7p¹", "electronegativity": null, "discovery": "2003", "discoverers": "Joint Institute for Nuclear Research, RIKEN" },
+            { "name": "Flerovio", "symbol": "Fl", "number": 114, "mass": 289, "xpos": 14, "ypos": 7, "category": "Metales", "config": "[Rn] 5f¹⁴ 6d¹⁰ 7s² 7p²", "electronegativity": null, "discovery": "1999", "discoverers": "Joint Institute for Nuclear Research" },
+            { "name": "Moscovio", "symbol": "Mc", "number": 115, "mass": 290, "xpos": 15, "ypos": 7, "category": "Metales", "config": "[Rn] 5f¹⁴ 6d¹⁰ 7s² 7p³", "electronegativity": null, "discovery": "2003", "discoverers": "Joint Institute for Nuclear Research" },
+            { "name": "Livermorio", "symbol": "Lv", "number": 116, "mass": 293, "xpos": 16, "ypos": 7, "category": "Metales", "config": "[Rn] 5f¹⁴ 6d¹⁰ 7s² 7p⁴", "electronegativity": null, "discovery": "2000", "discoverers": "Joint Institute for Nuclear Research" },
+            { "name": "Teneso", "symbol": "Ts", "number": 117, "mass": 294, "xpos": 17, "ypos": 7, "category": "Halogenos", "config": "[Rn] 5f¹⁴ 6d¹⁰ 7s² 7p⁵", "electronegativity": null, "discovery": "2010", "discoverers": "Joint Institute for Nuclear Research" },
+            { "name": "Oganesón", "symbol": "Og", "number": 118, "mass": 294, "xpos": 18, "ypos": 7, "category": "Gases Nobles", "config": "[Rn] 5f¹⁴ 6d¹⁰ 7s² 7p⁶", "electronegativity": null, "discovery": "2002", "discoverers": "Joint Institute for Nuclear Research" },
+            { "name": "Cerio", "symbol": "Ce", "number": 58, "mass": 140.116, "xpos": 4, "ypos": 8, "category": "Lantanidos", "config": "[Xe] 4f¹ 5d¹ 6s²", "electronegativity": 1.12, "discovery": "1803", "discoverers": "Jöns Jacob Berzelius, Wilhelm Hisinger, Martin Heinrich Klaproth" },
+            { "name": "Praseodimio", "symbol": "Pr", "number": 59, "mass": 140.90766, "xpos": 5, "ypos": 8, "category": "Lantanidos", "config": "[Xe] 4f³ 6s²", "electronegativity": 1.13, "discovery": "1885", "discoverers": "Carl Auer von Welsbach" },
+            { "name": "Neodimio", "symbol": "Nd", "number": 60, "mass": 144.242, "xpos": 6, "ypos": 8, "category": "Lantanidos", "config": "[Xe] 4f⁴ 6s²", "electronegativity": 1.14, "discovery": "1885", "discoverers": "Carl Auer von Welsbach" },
+            { "name": "Prometio", "symbol": "Pm", "number": 61, "mass": 145, "xpos": 7, "ypos": 8, "category": "Lantanidos", "config": "[Xe] 4f⁵ 6s²", "electronegativity": 1.13, "discovery": "1945", "discoverers": "Jacob A. Marinsky, Lawrence E. Glendenin, Charles D. Coryell" },
+            { "name": "Samario", "symbol": "Sm", "number": 62, "mass": 150.36, "xpos": 8, "ypos": 8, "category": "Lantanidos", "config": "[Xe] 4f⁶ 6s²", "electronegativity": 1.17, "discovery": "1879", "discoverers": "Paul-Émile Lecoq de Boisbaudran" },
+            { "name": "Europio", "symbol": "Eu", "number": 63, "mass": 151.964, "xpos": 9, "ypos": 8, "category": "Lantanidos", "config": "[Xe] 4f⁷ 6s²", "electronegativity": 1.2, "discovery": "1901", "discoverers": "Eugène-Anatole Demarçay" },
+            { "name": "Gadolinio", "symbol": "Gd", "number": 64, "mass": 157.25, "xpos": 10, "ypos": 8, "category": "Lantanidos", "config": "[Xe] 4f⁷ 5d¹ 6s²", "electronegativity": 1.2, "discovery": "1880", "discoverers": "Jean Charles Galissard de Marignac" },
+            { "name": "Terbio", "symbol": "Tb", "number": 65, "mass": 158.92535, "xpos": 11, "ypos": 8, "category": "Lantanidos", "config": "[Xe] 4f⁹ 6s²", "electronegativity": 1.1, "discovery": "1843", "discoverers": "Carl Gustaf Mosander" },
+            { "name": "Disprosio", "symbol": "Dy", "number": 66, "mass": 162.500, "xpos": 12, "ypos": 8, "category": "Lantanidos", "config": "[Xe] 4f¹⁰ 6s²", "electronegativity": 1.22, "discovery": "1886", "discoverers": "Paul-Émile Lecoq de Boisbaudran" },
+            { "name": "Holmio", "symbol": "Ho", "number": 67, "mass": 164.93033, "xpos": 13, "ypos": 8, "category": "Lantanidos", "config": "[Xe] 4f¹¹ 6s²", "electronegativity": 1.23, "discovery": "1878", "discoverers": "Marc Delafontaine, Jacques-Louis Soret" },
+            { "name": "Erbio", "symbol": "Er", "number": 68, "mass": 167.259, "xpos": 14, "ypos": 8, "category": "Lantanidos", "config": "[Xe] 4f¹² 6s²", "electronegativity": 1.24, "discovery": "1843", "discoverers": "Carl Gustaf Mosander" },
+            { "name": "Tulio", "symbol": "Tm", "number": 69, "mass": 168.93422, "xpos": 15, "ypos": 8, "category": "Lantanidos", "config": "[Xe] 4f¹³ 6s²", "electronegativity": 1.25, "discovery": "1879", "discoverers": "Per Teodor Cleve" },
+            { "name": "Iterbio", "symbol": "Yb", "number": 70, "mass": 173.045, "xpos": 16, "ypos": 8, "category": "Lantanidos", "config": "[Xe] 4f¹⁴ 6s²", "electronegativity": 1.1, "discovery": "1878", "discoverers": "Jean Charles Galissard de Marignac" },
+            { "name": "Torio", "symbol": "Th", "number": 90, "mass": 232.0377, "xpos": 4, "ypos": 9, "category": "Actinidos", "config": "[Rn] 6d² 7s²", "electronegativity": 1.3, "discovery": "1828", "discoverers": "Jöns Jacob Berzelius" },
+            { "name": "Protactinio", "symbol": "Pa", "number": 91, "mass": 231.03588, "xpos": 5, "ypos": 9, "category": "Actinidos", "config": "[Rn] 5f² 6d¹ 7s²", "electronegativity": 1.5, "discovery": "1913", "discoverers": "Kasimir Fajans, Oswald Helmuth Göhring" },
+            { "name": "Uranio", "symbol": "U", "number": 92, "mass": 238.02891, "xpos": 6, "ypos": 9, "category": "Actinidos", "config": "[Rn] 5f³ 6d¹ 7s²", "electronegativity": 1.38, "discovery": "1789", "discoverers": "Martin Heinrich Klaproth" },
+            { "name": "Neptunio", "symbol": "Np", "number": 93, "mass": 237, "xpos": 7, "ypos": 9, "category": "Actinidos", "config": "[Rn] 5f⁴ 6d¹ 7s²", "electronegativity": 1.36, "discovery": "1940", "discoverers": "Edwin McMillan, Philip H. Abelson" },
+            { "name": "Plutonio", "symbol": "Pu", "number": 94, "mass": 244, "xpos": 8, "ypos": 9, "category": "Actinidos", "config": "[Rn] 5f⁶ 7s²", "electronegativity": 1.28, "discovery": "1940", "discoverers": "Glenn T. Seaborg, Edwin McMillan, Joseph W. Kennedy, Arthur C. Wahl" },
+            { "name": "Americio", "symbol": "Am", "number": 95, "mass": 243, "xpos": 9, "ypos": 9, "category": "Actinidos", "config": "[Rn] 5f⁷ 7s²", "electronegativity": 1.3, "discovery": "1944", "discoverers": "Glenn T. Seaborg" },
+            { "name": "Curio", "symbol": "Cm", "number": 96, "mass": 247, "xpos": 10, "ypos": 9, "category": "Actinidos", "config": "[Rn] 5f⁷ 6d¹ 7s²", "electronegativity": 1.3, "discovery": "1944", "discoverers": "Glenn T. Seaborg" },
+            { "name": "Berkelio", "symbol": "Bk", "number": 97, "mass": 247, "xpos": 11, "ypos": 9, "category": "Actinidos", "config": "[Rn] 5f⁹ 7s²", "electronegativity": 1.3, "discovery": "1949", "discoverers": "Glenn T. Seaborg" },
+            { "name": "Californio", "symbol": "Cf", "number": 98, "mass": 251, "xpos": 12, "ypos": 9, "category": "Actinidos", "config": "[Rn] 5f¹⁰ 7s²", "electronegativity": 1.3, "discovery": "1950", "discoverers": "Stanley G. Thompson" },
+            { "name": "Einstenio", "symbol": "Es", "number": 99, "mass": 252, "xpos": 13, "ypos": 9, "category": "Actinidos", "config": "[Rn] 5f¹¹ 7s²", "electronegativity": 1.3, "discovery": "1952", "discoverers": "Argonne National Laboratory" },
+            { "name": "Fermio", "symbol": "Fm", "number": 100, "mass": 257, "xpos": 14, "ypos": 9, "category": "Actinidos", "config": "[Rn] 5f¹² 7s²", "electronegativity": 1.3, "discovery": "1952", "discoverers": "Argonne National Laboratory" },
+            { "name": "Mendelevio", "symbol": "Md", "number": 101, "mass": 258, "xpos": 15, "ypos": 9, "category": "Actinidos", "config": "[Rn] 5f¹³ 7s²", "electronegativity": 1.3, "discovery": "1955", "discoverers": "Albert Ghiorso" },
+            { "name": "Nobelio", "symbol": "No", "number": 102, "mass": 259, "xpos": 16, "ypos": 9, "category": "Actinidos", "config": "[Rn] 5f¹⁴ 7s²", "electronegativity": 1.3, "discovery": "1958", "discoverers": "Albert Ghiorso" }
+        ];
+
+        // Mapea las categorías a clases de color de Tailwind.
+        const categoryColors = {
+            "Metales": "color-metales",
+            "No metales": "color-no-metales",
+            "Metaloides": "color-metaloides",
+            "Halogenos": "color-halogenos",
+            "Gases Nobles": "color-gases-nobles",
+            "Lantanidos": "color-lantanidos",
+            "Actinidos": "color-actinidos"
+        };
+        
+        // Elementos de la tabla principal
+        const mainTable = document.getElementById('main-table');
+        const lanthanideActinideBlock = document.getElementById('lanthanide-actinide-block');
+
+        const sidebar = document.getElementById('sidebar');
+        const closeBtn = document.getElementById('close-btn');
+
+        // Función para renderizar la tabla periódica
+        function renderPeriodicTable(elementsToDisplay) {
+            mainTable.innerHTML = '';
+            lanthanideActinideBlock.innerHTML = '';
+            
+            const mainTableElements = elementsToDisplay.filter(el => el.ypos <= 7);
+            const subTableElements = elementsToDisplay.filter(el => el.ypos > 7);
+
+            for (let i = 1; i <= 7; i++) {
+                for (let j = 1; j <= 18; j++) {
+                    const element = mainTableElements.find(el => el.xpos === j && el.ypos === i);
+                    const cell = document.createElement('div');
+                    
+                    cell.style.gridRow = i;
+                    cell.style.gridColumn = j;
+                    cell.classList.add('element-cell');
+
+                    if (element) {
+                        cell.classList.add(categoryColors[element.category]);
+                        cell.setAttribute('data-element', JSON.stringify(element));
+                        cell.innerHTML = `
+                            <p class="element-number">${element.number}</p>
+                            <p class="element-symbol">${element.symbol}</p>
+                            <p class="element-name">${element.name}</p>
+                        `;
+                        cell.addEventListener('click', () => {
+                            showElementInfo(element);
+                            animateElementClick(cell);
+                        });
+                    } else if ((i === 6 && j > 2 && j < 18) || (i === 7 && j > 2 && j < 18)) {
+                        cell.classList.add('empty-cell');
+                    } else {
+                        cell.classList.add('empty-cell');
+                        cell.style.backgroundColor = 'transparent';
+                        cell.style.boxShadow = 'none';
+                        cell.style.cursor = 'default';
+                    }
+                    mainTable.appendChild(cell);
+                }
+            }
+
+            // Renderizar los lantánidos y actínidos por separado
+            for (let i = 1; i <= 2; i++) {
+                for (let j = 1; j <= 15; j++) {
+                    const element = subTableElements.find(el => el.xpos === j + 3 && el.ypos === i + 7);
+                    const cell = document.createElement('div');
+                    cell.classList.add('element-cell');
+                    
+                    if (element) {
+                        cell.classList.add(categoryColors[element.category]);
+                        cell.setAttribute('data-element', JSON.stringify(element));
+                        cell.innerHTML = `
+                            <p class="element-number">${element.number}</p>
+                            <p class="element-symbol">${element.symbol}</p>
+                            <p class="element-name">${element.name}</p>
+                        `;
+                        cell.addEventListener('click', () => {
+                            showElementInfo(element);
+                            animateElementClick(cell);
+                        });
+                    } else {
+                        cell.style.visibility = 'hidden';
+                    }
+                    lanthanideActinideBlock.appendChild(cell);
+                }
+            }
+        }
+
+        // Función para mostrar la información del elemento en el panel lateral
+        function showElementInfo(element) {
+            document.getElementById('info-name').textContent = element.name;
+            document.getElementById('info-symbol').textContent = element.symbol;
+            document.getElementById('info-number').textContent = element.number;
+            document.getElementById('info-mass').textContent = element.mass;
+            document.getElementById('info-config').textContent = element.config;
+            document.getElementById('info-electronegativity').textContent = element.electronegativity || 'N/A';
+            document.getElementById('info-discovery').textContent = element.discovery;
+            document.getElementById('info-discoverers').textContent = element.discoverers;
+
+            sidebar.classList.add('open');
+        }
+
+        // Función para cerrar el panel lateral
+        closeBtn.addEventListener('click', () => {
+            sidebar.classList.remove('open');
+        });
+
+        // Función para animar el clic en un elemento
+        function animateElementClick(elementCell) {
+            elementCell.classList.add('active');
+            setTimeout(() => {
+                elementCell.classList.remove('active');
+            }, 200);
+        }
+
+        // Función para filtrar los elementos por categoría
+        function filterElements(category) {
+            const allElements = document.querySelectorAll('.element-cell');
+            allElements.forEach(cell => {
+                const elementData = cell.getAttribute('data-element');
+                if (elementData) {
+                    const element = JSON.parse(elementData);
+                    if (category === 'todos' || element.category === category) {
+                        cell.classList.remove('is-hidden');
+                    } else {
+                        cell.classList.add('is-hidden');
+                    }
+                }
+            });
+            const subTableCells = document.querySelectorAll('#lanthanide-actinide-block .element-cell');
+            if (category === 'Lantanidos' || category === 'Actinidos' || category === 'todos') {
+                subTableCells.forEach(cell => cell.style.visibility = 'visible');
+            } else {
+                subTableCells.forEach(cell => cell.style.visibility = 'hidden');
+            }
+        }
+
+        // Renderizar la tabla al cargar la página
+        document.addEventListener('DOMContentLoaded', () => {
+            renderPeriodicTable(elements);
+        });
+
+    </script>
+</body>
+</html>

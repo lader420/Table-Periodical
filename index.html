@@ -113,14 +113,14 @@
         }
 
         /* Colores para la leyenda y los elementos */
-        .color-Metales { background-color: #66b3ff; }
-        .color-No-metales { background-color: #ff9966; }
-        .color-Metaloides { background-color: #99ffcc; }
-        .color-Halogenos { background-color: #8c8cd9; }
-        .color-Gases-Nobles { background-color: #d9b3ff; }
-        .color-Actinidos { background-color: #ff99cc; }
-        .color-Lantanidos { background-color: #ffb3b3; }
-        .color-Otros { background-color: #e2e8f0; }
+        .color-metales { background-color: #66b3ff; }
+        .color-no-metales { background-color: #ff9966; }
+        .color-metaloides { background-color: #99ffcc; }
+        .color-halogenos { background-color: #8c8cd9; }
+        .color-gases-nobles { background-color: #d9b3ff; }
+        .color-actinidos { background-color: #ff99cc; }
+        .color-lantanidos { background-color: #ffb3b3; }
+        .color-otros { background-color: #e2e8f0; }
 
         .legend-item {
             display: flex;
@@ -253,28 +253,28 @@
         <!-- Leyenda de colores -->
         <div class="flex flex-wrap justify-center mb-8 text-sm md:text-base">
             <div class="legend-item cursor-pointer" onclick="filterElements('Metales')">
-                <div class="legend-color color-Metales"></div>Metales
+                <div class="legend-color color-metales"></div>Metales
             </div>
             <div class="legend-item cursor-pointer" onclick="filterElements('No metales')">
-                <div class="legend-color color-No-metales"></div>No metales
+                <div class="legend-color color-no-metales"></div>No metales
             </div>
             <div class="legend-item cursor-pointer" onclick="filterElements('Metaloides')">
-                <div class="legend-color color-Metaloides"></div>Metaloides
+                <div class="legend-color color-metaloides"></div>Metaloides
             </div>
             <div class="legend-item cursor-pointer" onclick="filterElements('Halogenos')">
-                <div class="legend-color color-Halogenos"></div>Halógenos
+                <div class="legend-color color-halogenos"></div>Halógenos
             </div>
             <div class="legend-item cursor-pointer" onclick="filterElements('Gases Nobles')">
-                <div class="legend-color color-Gases-Nobles"></div>Gases Nobles
+                <div class="legend-color color-gases-nobles"></div>Gases Nobles
             </div>
             <div class="legend-item cursor-pointer" onclick="filterElements('Lantanidos')">
-                <div class="legend-color color-Lantanidos"></div>Lantánidos
+                <div class="legend-color color-lantanidos"></div>Lantánidos
             </div>
             <div class="legend-item cursor-pointer" onclick="filterElements('Actinidos')">
-                <div class="legend-color color-Actinidos"></div>Actínidos
+                <div class="legend-color color-actinidos"></div>Actínidos
             </div>
             <div class="legend-item cursor-pointer" onclick="filterElements('todos')">
-                <div class="legend-color color-Otros"></div>Todos
+                <div class="legend-color color-otros"></div>Todos
             </div>
         </div>
 
@@ -306,7 +306,7 @@
     </div>
 
     <script>
-        // Datos completos de los 118 elementos de la tabla periódica.
+        // Datos de los 118 elementos de la tabla periódica.
         const elements = [
             { "name": "Hidrógeno", "symbol": "H", "number": 1, "mass": 1.008, "xpos": 1, "ypos": 1, "category": "No metales", "config": "1s¹", "electronegativity": 2.2, "discovery": "1766", "discoverers": "Henry Cavendish" },
             { "name": "Helio", "symbol": "He", "number": 2, "mass": 4.002602, "xpos": 18, "ypos": 1, "category": "Gases Nobles", "config": "1s²", "electronegativity": null, "discovery": "1868", "discoverers": "Pierre Janssen, Norman Lockyer" },
@@ -346,7 +346,7 @@
             { "name": "Kriptón", "symbol": "Kr", "number": 36, "mass": 83.798, "xpos": 18, "ypos": 4, "category": "Gases Nobles", "config": "[Ar] 3d¹⁰ 4s² 4p⁶", "electronegativity": 3.0, "discovery": "1898", "discoverers": "William Ramsay, Morris Travers" },
             { "name": "Rubidio", "symbol": "Rb", "number": 37, "mass": 85.4678, "xpos": 1, "ypos": 5, "category": "Metales", "config": "[Kr] 5s¹", "electronegativity": 0.82, "discovery": "1861", "discoverers": "Robert Bunsen, Gustav Kirchhoff" },
             { "name": "Estroncio", "symbol": "Sr", "number": 38, "mass": 87.62, "xpos": 2, "ypos": 5, "category": "Metales", "config": "[Kr] 5s²", "electronegativity": 0.95, "discovery": "1790", "discoverers": "Adair Crawford" },
-            { "name": "Ytrio", "symbol": "Y", "number": 39, "mass": 88.90584, "xpos": 3, "ypos": 5, "category": "Metales", "config": "[Kr] 4d¹ 5s²", "electronegativilty": 1.22, "discovery": "1794", "discoverers": "Johan Gadolin" },
+            { "name": "Ytrio", "symbol": "Y", "number": 39, "mass": 88.90584, "xpos": 3, "ypos": 5, "category": "Metales", "config": "[Kr] 4d¹ 5s²", "electronegativity": 1.22, "discovery": "1794", "discoverers": "Johan Gadolin" },
             { "name": "Circonio", "symbol": "Zr", "number": 40, "mass": 91.224, "xpos": 4, "ypos": 5, "category": "Metales", "config": "[Kr] 4d² 5s²", "electronegativity": 1.33, "discovery": "1789", "discoverers": "Martin Heinrich Klaproth" },
             { "name": "Niobio", "symbol": "Nb", "number": 41, "mass": 92.90637, "xpos": 5, "ypos": 5, "category": "Metales", "config": "[Kr] 4d⁴ 5s¹", "electronegativity": 1.6, "discovery": "1801", "discoverers": "Charles Hatchett" },
             { "name": "Molibdeno", "symbol": "Mo", "number": 42, "mass": 95.95, "xpos": 6, "ypos": 5, "category": "Metales", "config": "[Kr] 4d⁵ 5s¹", "electronegativity": 2.16, "discovery": "1778", "discoverers": "Carl Wilhelm Scheele" },
@@ -398,154 +398,188 @@
             { "name": "Radio", "symbol": "Ra", "number": 88, "mass": 226, "xpos": 2, "ypos": 7, "category": "Metales", "config": "[Rn] 7s²", "electronegativity": 0.9, "discovery": "1898", "discoverers": "Marie Curie, Pierre Curie" },
             { "name": "Actinio", "symbol": "Ac", "number": 89, "mass": 227, "xpos": 3, "ypos": 7, "category": "Actinidos", "config": "[Rn] 6d¹ 7s²", "electronegativity": 1.1, "discovery": "1899", "discoverers": "André-Louis Debierne" },
             { "name": "Torio", "symbol": "Th", "number": 90, "mass": 232.03805, "xpos": 4, "ypos": 9, "category": "Actinidos", "config": "[Rn] 6d² 7s²", "electronegativity": 1.3, "discovery": "1828", "discoverers": "Jöns Jacob Berzelius" },
-            { "name": "Protactinio", "symbol": "Pa", "number": 91, "mass": 231.03588, "xpos": 5, "ypos": 9, "category": "Actinidos", "config": "[Rn] 5f² 6d¹ 7s²", "electronegativity": 1.5, "discovery": "1913", "discoverers": "Kasimir Fajans, Oswald Helmuth Göhring" },
+            { "name": "Protactinio", "symbol": "Pa", "number": 91, "mass": 231.03588, "xpos": 5, "ypos": 9, "category": "Actinidos", "config": "[Rn] 5f² 6d¹ 7s²", "electronegativity": 1.5, "discovery": "1913", "discoverers": "Kazimierz Fajans, Oswald Helmuth Göhring" },
             { "name": "Uranio", "symbol": "U", "number": 92, "mass": 238.02891, "xpos": 6, "ypos": 9, "category": "Actinidos", "config": "[Rn] 5f³ 6d¹ 7s²", "electronegativity": 1.38, "discovery": "1789", "discoverers": "Martin Heinrich Klaproth" },
-            { "name": "Neptunio", "symbol": "Np", "number": 93, "mass": 237, "xpos": 7, "ypos": 9, "category": "Actinidos", "config": "[Rn] 5f⁴ 6d¹ 7s²", "electronegativity": 1.36, "discovery": "1940", "discoverers": "Edwin McMillan, Philip Abelson" },
-            { "name": "Plutonio", "symbol": "Pu", "number": 94, "mass": 244, "xpos": 8, "ypos": 9, "category": "Actinidos", "config": "[Rn] 5f⁶ 7s²", "electronegativity": 1.28, "discovery": "1940", "discoverers": "Glenn T. Seaborg, Edwin McMillan, Joseph W. Kennedy, Arthur Wahl" },
-            { "name": "Americio", "symbol": "Am", "number": 95, "mass": 243, "xpos": 9, "ypos": 9, "category": "Actinidos", "config": "[Rn] 5f⁷ 7s²", "electronegativity": 1.3, "discovery": "1944", "discoverers": "Glenn T. Seaborg, Ralph A. James, Leon O. Morgan, Albert Ghiorso" },
-            { "name": "Curio", "symbol": "Cm", "number": 96, "mass": 247, "xpos": 10, "ypos": 9, "category": "Actinidos", "config": "[Rn] 5f⁷ 6d¹ 7s²", "electronegativity": 1.3, "discovery": "1944", "discoverers": "Glenn T. Seaborg, Ralph A. James, Albert Ghiorso" },
-            { "name": "Berkelio", "symbol": "Bk", "number": 97, "mass": 247, "xpos": 11, "ypos": 9, "category": "Actinidos", "config": "[Rn] 5f⁹ 7s²", "electronegativity": 1.3, "discovery": "1949", "discoverers": "Glenn T. Seaborg, Albert Ghiorso, Stanley G. Thompson, Kenneth Street Jr." },
-            { "name": "Californio", "symbol": "Cf", "number": 98, "mass": 251, "xpos": 12, "ypos": 9, "category": "Actinidos", "config": "[Rn] 5f¹⁰ 7s²", "electronegativity": 1.3, "discovery": "1950", "discoverers": "Glenn T. Seaborg, Albert Ghiorso, Stanley G. Thompson, Kenneth Street Jr." },
+            { "name": "Neptunio", "symbol": "Np", "number": 93, "mass": 237, "xpos": 7, "ypos": 9, "category": "Actinidos", "config": "[Rn] 5f⁴ 6d¹ 7s²", "electronegativity": 1.36, "discovery": "1940", "discoverers": "Edwin McMillan, Philip H. Abelson" },
+            { "name": "Plutonio", "symbol": "Pu", "number": 94, "mass": 244, "xpos": 8, "ypos": 9, "category": "Actinidos", "config": "[Rn] 5f⁶ 7s²", "electronegativity": 1.28, "discovery": "1940", "discoverers": "Glenn T. Seaborg, Edwin McMillan" },
+            { "name": "Americio", "symbol": "Am", "number": 95, "mass": 243, "xpos": 9, "ypos": 9, "category": "Actinidos", "config": "[Rn] 5f⁷ 7s²", "electronegativity": 1.3, "discovery": "1944", "discoverers": "Glenn T. Seaborg" },
+            { "name": "Curio", "symbol": "Cm", "number": 96, "mass": 247, "xpos": 10, "ypos": 9, "category": "Actinidos", "config": "[Rn] 5f⁷ 6d¹ 7s²", "electronegativity": 1.3, "discovery": "1944", "discoverers": "Glenn T. Seaborg" },
+            { "name": "Berkelio", "symbol": "Bk", "number": 97, "mass": 247, "xpos": 11, "ypos": 9, "category": "Actinidos", "config": "[Rn] 5f⁹ 7s²", "electronegativity": 1.3, "discovery": "1949", "discoverers": "Stanley G. Thompson, Albert Ghiorso, Glenn T. Seaborg" },
+            { "name": "Californio", "symbol": "Cf", "number": 98, "mass": 251, "xpos": 12, "ypos": 9, "category": "Actinidos", "config": "[Rn] 5f¹⁰ 7s²", "electronegativity": 1.3, "discovery": "1950", "discoverers": "Stanley G. Thompson, Kenneth Street Jr., Albert Ghiorso, Glenn T. Seaborg" },
             { "name": "Einstenio", "symbol": "Es", "number": 99, "mass": 252, "xpos": 13, "ypos": 9, "category": "Actinidos", "config": "[Rn] 5f¹¹ 7s²", "electronegativity": 1.3, "discovery": "1952", "discoverers": "Albert Ghiorso" },
             { "name": "Fermio", "symbol": "Fm", "number": 100, "mass": 257, "xpos": 14, "ypos": 9, "category": "Actinidos", "config": "[Rn] 5f¹² 7s²", "electronegativity": 1.3, "discovery": "1952", "discoverers": "Albert Ghiorso" },
-            { "name": "Mendelevio", "symbol": "Md", "number": 101, "mass": 258, "xpos": 15, "ypos": 9, "category": "Actinidos", "config": "[Rn] 5f¹³ 7s²", "electronegativity": 1.3, "discovery": "1955", "discoverers": "Albert Ghiorso, Bernard G. Harvey, Gregory R. Choppin, Stanley G. Thompson, Glenn T. Seaborg" },
-            { "name": "Nobelio", "symbol": "No", "number": 102, "mass": 259, "xpos": 16, "ypos": 9, "category": "Actinidos", "config": "[Rn] 5f¹⁴ 7s²", "electronegativity": 1.3, "discovery": "1958", "discoverers": "Glenn T. Seaborg, Albert Ghiorso, Torbjørn Sikkeland, John R. Walton" },
-            { "name": "Lawrencio", "symbol": "Lr", "number": 103, "mass": 262, "xpos": 17, "ypos": 9, "category": "Actinidos", "config": "[Rn] 5f¹⁴ 7s² 7p¹", "electronegativity": 1.3, "discovery": "1961", "discoverers": "Albert Ghiorso, Torbjørn Sikkeland, Almon Larsh, Robert M. Latimer" },
-            { "name": "Rutherfordio", "symbol": "Rf", "number": 104, "mass": 267, "xpos": 4, "ypos": 7, "category": "Metales", "config": "[Rn] 5f¹⁴ 6d² 7s²", "electronegativity": null, "discovery": "1964", "discoverers": "Joint Institute for Nuclear Research (Dubna)" },
-            { "name": "Dubnio", "symbol": "Db", "number": 105, "mass": 268, "xpos": 5, "ypos": 7, "category": "Metales", "config": "[Rn] 5f¹⁴ 6d³ 7s²", "electronegativity": null, "discovery": "1968", "discoverers": "Joint Institute for Nuclear Research (Dubna)" },
-            { "name": "Seaborgio", "symbol": "Sg", "number": 106, "mass": 269, "xpos": 6, "ypos": 7, "category": "Metales", "config": "[Rn] 5f¹⁴ 6d⁴ 7s²", "electronegativity": null, "discovery": "1974", "discoverers": "Albert Ghiorso, E. Kenneth Hulet, etc. at Lawrence Berkeley Laboratory" },
-            { "name": "Bohrio", "symbol": "Bh", "number": 107, "mass": 270, "xpos": 7, "ypos": 7, "category": "Metales", "config": "[Rn] 5f¹⁴ 6d⁵ 7s²", "electronegativity": null, "discovery": "1981", "discoverers": "GSI Helmholtz Centre for Heavy Ion Research" },
-            { "name": "Hassio", "symbol": "Hs", "number": 108, "mass": 277, "xpos": 8, "ypos": 7, "category": "Metales", "config": "[Rn] 5f¹⁴ 6d⁶ 7s²", "electronegativity": null, "discovery": "1984", "discoverers": "GSI Helmholtz Centre for Heavy Ion Research" },
-            { "name": "Meitnerio", "symbol": "Mt", "number": 109, "mass": 278, "xpos": 9, "ypos": 7, "category": "Metales", "config": "[Rn] 5f¹⁴ 6d⁷ 7s²", "electronegativity": null, "discovery": "1982", "discoverers": "GSI Helmholtz Centre for Heavy Ion Research" },
-            { "name": "Darmstadtio", "symbol": "Ds", "number": 110, "mass": 281, "xpos": 10, "ypos": 7, "category": "Metales", "config": "[Rn] 5f¹⁴ 6d⁸ 7s²", "electronegativity": null, "discovery": "1994", "discoverers": "GSI Helmholtz Centre for Heavy Ion Research" },
-            { "name": "Roentgenio", "symbol": "Rg", "number": 111, "mass": 282, "xpos": 11, "ypos": 7, "category": "Metales", "config": "[Rn] 5f¹⁴ 6d⁹ 7s²", "electronegativity": null, "discovery": "1994", "discoverers": "GSI Helmholtz Centre for Heavy Ion Research" },
-            { "name": "Copernicio", "symbol": "Cn", "number": 112, "mass": 285, "xpos": 12, "ypos": 7, "category": "Metales", "config": "[Rn] 5f¹⁴ 6d¹⁰ 7s²", "electronegativity": null, "discovery": "1996", "discoverers": "GSI Helmholtz Centre for Heavy Ion Research" },
-            { "name": "Nihonio", "symbol": "Nh", "number": 113, "mass": 286, "xpos": 13, "ypos": 7, "category": "Metales", "config": "[Rn] 5f¹⁴ 6d¹⁰ 7s² 7p¹", "electronegativity": null, "discovery": "2003", "discoverers": "Joint Institute for Nuclear Research (Dubna), Lawrence Livermore National Laboratory" },
-            { "name": "Flerovio", "symbol": "Fl", "number": 114, "mass": 289, "xpos": 14, "ypos": 7, "category": "Metales", "config": "[Rn] 5f¹⁴ 6d¹⁰ 7s² 7p²", "electronegativity": null, "discovery": "1998", "discoverers": "Joint Institute for Nuclear Research (Dubna)" },
-            { "name": "Moscovio", "symbol": "Mc", "number": 115, "mass": 290, "xpos": 15, "ypos": 7, "category": "Metales", "config": "[Rn] 5f¹⁴ 6d¹⁰ 7s² 7p³", "electronegativity": null, "discovery": "2003", "discoverers": "Joint Institute for Nuclear Research (Dubna)" },
-            { "name": "Livermorio", "symbol": "Lv", "number": 116, "mass": 293, "xpos": 16, "ypos": 7, "category": "Metales", "config": "[Rn] 5f¹⁴ 6d¹⁰ 7s² 7p⁴", "electronegativity": null, "discovery": "2000", "discoverers": "Joint Institute for Nuclear Research (Dubna)" },
-            { "name": "Teneso", "symbol": "Ts", "number": 117, "mass": 294, "xpos": 17, "ypos": 7, "category": "Halogenos", "config": "[Rn] 5f¹⁴ 6d¹⁰ 7s² 7p⁵", "electronegativity": null, "discovery": "2010", "discoverers": "Joint Institute for Nuclear Research (Dubna), Lawrence Livermore National Laboratory" },
-            { "name": "Oganesón", "symbol": "Og", "number": 118, "mass": 294, "xpos": 18, "ypos": 7, "category": "Gases Nobles", "config": "[Rn] 5f¹⁴ 6d¹⁰ 7s² 7p⁶", "electronegativity": null, "discovery": "2002", "discoverers": "Joint Institute for Nuclear Research (Dubna), Lawrence Livermore National Laboratory" }
+            { "name": "Mendelevio", "symbol": "Md", "number": 101, "mass": 258, "xpos": 15, "ypos": 9, "category": "Actinidos", "config": "[Rn] 5f¹³ 7s²", "electronegativity": 1.3, "discovery": "1955", "discoverers": "Albert Ghiorso, Glenn T. Seaborg" },
+            { "name": "Nobelio", "symbol": "No", "number": 102, "mass": 259, "xpos": 16, "ypos": 9, "category": "Actinidos", "config": "[Rn] 5f¹⁴ 7s²", "electronegativity": 1.3, "discovery": "1958", "discoverers": "Albert Ghiorso, Torbjørn Sikkeland, John R. Walton, Glenn T. Seaborg" },
+            { "name": "Lawrencio", "symbol": "Lr", "number": 103, "mass": 266, "xpos": 17, "ypos": 9, "category": "Actinidos", "config": "[Rn] 5f¹⁴ 7s² 7p¹", "electronegativity": 1.3, "discovery": "1961", "discoverers": "Albert Ghiorso, Torbjørn Sikkeland, Almon Larsh, Robert M. Latimer" },
+            { "name": "Rutherfordio", "symbol": "Rf", "number": 104, "mass": 267, "xpos": 4, "ypos": 7, "category": "Metales", "config": "[Rn] 5f¹⁴ 6d² 7s²", "electronegativity": 1.3, "discovery": "1964", "discoverers": "Joint Institute for Nuclear Research, Lawrence Berkeley National Laboratory" },
+            { "name": "Dubnio", "symbol": "Db", "number": 105, "mass": 268, "xpos": 5, "ypos": 7, "category": "Metales", "config": "[Rn] 5f¹⁴ 6d³ 7s²", "electronegativity": null, "discovery": "1970", "discoverers": "Joint Institute for Nuclear Research, Lawrence Berkeley National Laboratory" },
+            { "name": "Seaborgio", "symbol": "Sg", "number": 106, "mass": 269, "xpos": 6, "ypos": 7, "category": "Metales", "config": "[Rn] 5f¹⁴ 6d⁴ 7s²", "electronegativity": null, "discovery": "1974", "discoverers": "Albert Ghiorso" },
+            { "name": "Bohrio", "symbol": "Bh", "number": 107, "mass": 270, "xpos": 7, "ypos": 7, "category": "Metales", "config": "[Rn] 5f¹⁴ 6d⁵ 7s²", "electronegativity": null, "discovery": "1981", "discoverers": "Peter Armbruster, Gottfried Münzenberg" },
+            { "name": "Hassio", "symbol": "Hs", "number": 108, "mass": 269, "xpos": 8, "ypos": 7, "category": "Metales", "config": "[Rn] 5f¹⁴ 6d⁶ 7s²", "electronegativity": null, "discovery": "1984", "discoverers": "Peter Armbruster, Gottfried Münzenberg" },
+            { "name": "Meitnerio", "symbol": "Mt", "number": 109, "mass": 278, "xpos": 9, "ypos": 7, "category": "Metales", "config": "[Rn] 5f¹⁴ 6d⁷ 7s²", "electronegativity": null, "discovery": "1982", "discoverers": "Peter Armbruster, Gottfried Münzenberg" },
+            { "name": "Darmstadtio", "symbol": "Ds", "number": 110, "mass": 281, "xpos": 10, "ypos": 7, "category": "Metales", "config": "[Rn] 5f¹⁴ 6d⁹ 7s¹", "electronegativity": null, "discovery": "1994", "discoverers": "Peter Armbruster, Gottfried Münzenberg" },
+            { "name": "Roentgenio", "symbol": "Rg", "number": 111, "mass": 282, "xpos": 11, "ypos": 7, "category": "Metales", "config": "[Rn] 5f¹⁴ 6d¹⁰ 7s¹", "electronegativity": null, "discovery": "1994", "discoverers": "Peter Armbruster, Gottfried Münzenberg" },
+            { "name": "Copernicio", "symbol": "Cn", "number": 112, "mass": 285, "xpos": 12, "ypos": 7, "category": "Metales", "config": "[Rn] 5f¹⁴ 6d¹⁰ 7s²", "electronegativity": null, "discovery": "1996", "discoverers": "Sigurd Hofmann" },
+            { "name": "Nihonio", "symbol": "Nh", "number": 113, "mass": 286, "xpos": 13, "ypos": 7, "category": "Metales", "config": "[Rn] 5f¹⁴ 6d¹⁰ 7s² 7p¹", "electronegativity": null, "discovery": "2003", "discoverers": "Joint Institute for Nuclear Research, RIKEN" },
+            { "name": "Flerovio", "symbol": "Fl", "number": 114, "mass": 289, "xpos": 14, "ypos": 7, "category": "Metales", "config": "[Rn] 5f¹⁴ 6d¹⁰ 7s² 7p²", "electronegativity": null, "discovery": "1999", "discoverers": "Joint Institute for Nuclear Research" },
+            { "name": "Moscovio", "symbol": "Mc", "number": 115, "mass": 290, "xpos": 15, "ypos": 7, "category": "Metales", "config": "[Rn] 5f¹⁴ 6d¹⁰ 7s² 7p³", "electronegativity": null, "discovery": "2003", "discoverers": "Joint Institute for Nuclear Research" },
+            { "name": "Livermorio", "symbol": "Lv", "number": 116, "mass": 293, "xpos": 16, "ypos": 7, "category": "Metales", "config": "[Rn] 5f¹⁴ 6d¹⁰ 7s² 7p⁴", "electronegativity": null, "discovery": "2000", "discoverers": "Joint Institute for Nuclear Research" },
+            { "name": "Teneso", "symbol": "Ts", "number": 117, "mass": 294, "xpos": 17, "ypos": 7, "category": "Halogenos", "config": "[Rn] 5f¹⁴ 6d¹⁰ 7s² 7p⁵", "electronegativity": null, "discovery": "2010", "discoverers": "Joint Institute for Nuclear Research" },
+            { "name": "Oganesón", "symbol": "Og", "number": 118, "mass": 294, "xpos": 18, "ypos": 7, "category": "Gases Nobles", "config": "[Rn] 5f¹⁴ 6d¹⁰ 7s² 7p⁶", "electronegativity": null, "discovery": "2002", "discoverers": "Joint Institute for Nuclear Research" }
         ];
 
-        // Se obtienen las referencias a los elementos del DOM
         const mainTable = document.getElementById('main-table');
         const lanthanideActinideBlock = document.getElementById('lanthanide-actinide-block');
         const sidebar = document.getElementById('sidebar');
         const closeBtn = document.getElementById('close-btn');
+        let activeElement = null;
 
-        // Se crea el objeto para almacenar los elementos generados para una manipulación más fácil.
-        const elementCells = {};
-
-        // Función para renderizar toda la tabla periódica
-        function renderTable() {
-            // Limpia la tabla y el bloque de lantánidos/actínidos
+        // Función para renderizar los elementos en la tabla
+        function renderElements(elementsToRender) {
             mainTable.innerHTML = '';
             lanthanideActinideBlock.innerHTML = '';
+            const allElements = elements.map(e => ({...e, isVisible: true}));
 
-            // Se crean las celdas de los grupos 1-18
-            for (let i = 1; i <= 18; i++) {
-                const groupCell = document.createElement('div');
-                groupCell.className = 'group-cell text-xs md:text-sm text-gray-700';
-                groupCell.textContent = i;
-                groupCell.style.gridColumn = i;
-                groupCell.style.gridRow = 1; // Fila de encabezado
-                mainTable.appendChild(groupCell);
-            }
-
-            // Se crean las celdas de los períodos 1-7 (encabezados de fila)
-            for (let i = 1; i <= 7; i++) {
-                const periodCell = document.createElement('div');
-                periodCell.className = 'group-cell text-xs md:text-sm text-gray-700';
-                periodCell.textContent = i;
-                periodCell.style.gridColumn = 0; // Columna de encabezado
-                periodCell.style.gridRow = i + 1;
-                mainTable.appendChild(periodCell);
-            }
-
-            elements.forEach(element => {
-                const elementDiv = document.createElement('div');
-                elementDiv.className = `element-cell color-${element.category.replace(/ /g, '-')}`;
-                elementDiv.id = `element-${element.number}`;
-                elementDiv.onclick = () => showElementDetails(element);
-                
-                // Contenido de la celda del elemento
-                elementDiv.innerHTML = `
-                    <span class="element-number">${element.number}</span>
-                    <span class="element-symbol">${element.symbol}</span>
-                    <span class="element-name">${element.name}</span>
-                `;
-
-                // Manejo de las posiciones en la tabla
-                if (element.ypos <= 7) {
-                    elementDiv.style.gridColumn = element.xpos;
-                    elementDiv.style.gridRow = element.ypos + 1;
-                    mainTable.appendChild(elementDiv);
-                } else {
-                    // Posicionamiento de Lantánidos y Actínidos en su bloque
-                    elementDiv.style.gridColumn = element.xpos - 3;
-                    elementDiv.style.gridRow = element.ypos - 7;
-                    lanthanideActinideBlock.appendChild(elementDiv);
+            // Crear las celdas vacías para el espacio en blanco de la tabla
+            for (let i = 0; i < 7; i++) {
+                for (let j = 0; j < 18; j++) {
+                    const foundElement = elements.find(el => el.xpos === j + 1 && el.ypos === i + 1);
+                    
+                    if (foundElement) {
+                        const elementDiv = createElementCell(foundElement);
+                        mainTable.appendChild(elementDiv);
+                    } else if ((i === 5 && j >= 2 && j <= 16) || (i === 6 && j >= 2 && j <= 16)) {
+                        // Celdas para los Lantánidos y Actínidos en la tabla principal
+                        const placeholderDiv = document.createElement('div');
+                        placeholderDiv.className = `element-cell`;
+                        placeholderDiv.innerHTML = `<span class="font-bold text-lg">${i === 5 ? '57-71' : '89-103'}</span>`;
+                        mainTable.appendChild(placeholderDiv);
+                    } else {
+                        // Celdas vacías para el layout
+                        const emptyDiv = document.createElement('div');
+                        emptyDiv.className = 'element-cell is-hidden';
+                        mainTable.appendChild(emptyDiv);
+                    }
                 }
-                elementCells[element.number] = elementDiv;
-            });
-            
-            // Celdas de referencia para lantánidos y actínidos
-            const lanthanideRef = document.createElement('div');
-            lanthanideRef.className = 'element-cell color-Lantanidos text-center';
-            lanthanideRef.innerHTML = `<span class="element-symbol">57-71</span>`;
-            lanthanideRef.style.gridColumn = 3;
-            lanthanideRef.style.gridRow = 7;
-            mainTable.appendChild(lanthanideRef);
+            }
 
-            const actinideRef = document.createElement('div');
-            actinideRef.className = 'element-cell color-Actinidos text-center';
-            actinideRef.innerHTML = `<span class="element-symbol">89-103</span>`;
-            actinideRef.style.gridColumn = 3;
-            actinideRef.style.gridRow = 8;
-            mainTable.appendChild(actinideRef);
+            // Renderizar los lantánidos y actínidos en su bloque
+            const lanthanides = elements.filter(el => el.ypos === 8);
+            const actinides = elements.filter(el => el.ypos === 9);
+            lanthanides.forEach(el => lanthanideActinideBlock.appendChild(createElementCell(el)));
+            actinides.forEach(el => lanthanideActinideBlock.appendChild(createElementCell(el)));
+
+            // Aplicar el filtro si es necesario
+            if (elementsToRender !== allElements) {
+                const visibleSymbols = new Set(elementsToRender.map(e => e.symbol));
+                document.querySelectorAll('.element-cell').forEach(cell => {
+                    const symbol = cell.querySelector('.element-symbol')?.textContent;
+                    if (symbol && !visibleSymbols.has(symbol)) {
+                        cell.classList.add('opacity-30', 'scale-95');
+                    } else {
+                        cell.classList.remove('opacity-30', 'scale-95');
+                    }
+                });
+            } else {
+                document.querySelectorAll('.element-cell').forEach(cell => {
+                    cell.classList.remove('opacity-30', 'scale-95');
+                });
+            }
         }
 
-        // Función para mostrar los detalles del elemento en el panel lateral
-        function showElementDetails(element) {
+        // Función para crear una celda de elemento HTML
+        function createElementCell(element) {
+            const elementDiv = document.createElement('div');
+            elementDiv.className = `element-cell color-${convertCategoryToClass(element.category)}`;
+            elementDiv.setAttribute('data-symbol', element.symbol);
+            elementDiv.innerHTML = `
+                <span class="element-number">${element.number}</span>
+                <span class="element-symbol">${element.symbol}</span>
+                <span class="element-name">${element.name}</span>
+            `;
+
+            elementDiv.addEventListener('click', () => {
+                showElementInfo(element);
+            });
+
+            return elementDiv;
+        }
+
+        // Función para convertir la categoría del elemento a una clase CSS
+        function convertCategoryToClass(category) {
+            switch (category) {
+                case 'Metales': return 'metales';
+                case 'No metales': return 'no-metales';
+                case 'Metaloides': return 'metaloides';
+                case 'Halogenos': return 'halogenos';
+                case 'Gases Nobles': return 'gases-nobles';
+                case 'Lantanidos': return 'lantanidos';
+                case 'Actinidos': return 'actinidos';
+                default: return 'otros';
+            }
+        }
+
+        // Función para mostrar la información del elemento en el panel lateral
+        function showElementInfo(element) {
+            // Eliminar la clase 'active' del elemento anterior
+            if (activeElement) {
+                activeElement.classList.remove('active');
+            }
+            
+            // Añadir la clase 'active' al elemento actual
+            const currentElementCell = document.querySelector(`[data-symbol="${element.symbol}"]`);
+            if (currentElementCell) {
+                currentElementCell.classList.add('active');
+                activeElement = currentElementCell;
+            }
+
             document.getElementById('info-name').textContent = element.name;
             document.getElementById('info-symbol').textContent = element.symbol;
             document.getElementById('info-number').textContent = element.number;
             document.getElementById('info-mass').textContent = element.mass;
             document.getElementById('info-config').textContent = element.config;
-            document.getElementById('info-electronegativity').textContent = element.electronegativity !== null ? element.electronegativity : 'N/A';
+            document.getElementById('info-electronegativity').textContent = element.electronegativity || 'No disponible';
             document.getElementById('info-discovery').textContent = element.discovery;
             document.getElementById('info-discoverers').textContent = element.discoverers;
+
             sidebar.classList.add('open');
-            
-            // Eliminar la clase 'active' de todos los elementos
-            document.querySelectorAll('.element-cell').forEach(cell => cell.classList.remove('active'));
-            // Agregar la clase 'active' al elemento clicado
-            document.getElementById(`element-${element.number}`).classList.add('active');
         }
 
         // Función para filtrar los elementos por categoría
         function filterElements(category) {
-            elements.forEach(element => {
-                const cell = elementCells[element.number];
-                if (cell) {
-                    if (category === 'todos' || element.category === category.replace(/-/g, ' ')) {
-                        cell.classList.remove('is-hidden');
-                    } else {
-                        cell.classList.add('is-hidden');
-                    }
-                }
-            });
+            if (category === 'todos') {
+                renderElements(elements);
+            } else {
+                const filteredElements = elements.filter(el => el.category === category);
+                renderElements(filteredElements);
+            }
         }
-        
-        // Manejador del evento para el botón de cierre del panel lateral
-        closeBtn.onclick = () => {
-            sidebar.classList.remove('open');
-            document.querySelectorAll('.element-cell').forEach(cell => cell.classList.remove('active'));
-        };
 
-        // Escucha el evento de carga del DOM para inicializar la tabla
-        document.addEventListener('DOMContentLoaded', renderTable);
+        // Event listener para el botón de cerrar del panel lateral
+        closeBtn.addEventListener('click', () => {
+            sidebar.classList.remove('open');
+            // Eliminar la clase 'active' del elemento si el panel se cierra
+            if (activeElement) {
+                activeElement.classList.remove('active');
+                activeElement = null;
+            }
+        });
+
+        // Event listener para cerrar el panel al hacer clic fuera
+        document.addEventListener('click', (e) => {
+            if (!sidebar.contains(e.target) && !e.target.closest('.element-cell') && sidebar.classList.contains('open')) {
+                sidebar.classList.remove('open');
+                if (activeElement) {
+                    activeElement.classList.remove('active');
+                    activeElement = null;
+                }
+            }
+        });
+
+        // Iniciar la aplicación
+        window.onload = function() {
+            renderElements(elements);
+        };
     </script>
 </body>
 </html>
